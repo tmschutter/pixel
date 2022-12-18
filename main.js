@@ -22,22 +22,36 @@
 
     mainBox.appendChild(pickedColor())
 
-    function canvas(count){
-        let i = 0
-        while (i < count){
-            canvasBox.appendChild(makeSquare())
-            i++
+    function flexColumn(){
+        var column = document.createElement('div')
+        column.classList.add('column')
+
+        let y = 0
+        while (y < 35){
+            let div = makeSquare()
+            div.id = 'y' + y
+            column.appendChild(div)
+            y++
+        }
+        return column
+    }
+
+    function canvas(){
+        let x = 0
+        while (x < 50){
+            var col = flexColumn()
+            col.id = 'x' + x
+            canvasBox.appendChild(col)
+            x++
         }
     }
-    canvas(1750)
+    canvas()
 
     function pickerBox(color){
         var div = document.createElement('div')
-        div.className = 'ui'
+        div.classList.add('ui')
         div.classList.add('picker')
         div.id = `${color} picker`
-        div.style.width = '50px'
-        div.style.height = '50px'
         div.style.backgroundColor = color
         div.addEventListener('click', function(){
             currentColor = color
