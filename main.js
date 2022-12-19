@@ -13,7 +13,7 @@
     canvasBox.addEventListener('mousedown', function(e){
         mouseDown = true
     })
-    canvasBox.addEventListener('mouseup', function(e){
+    document.addEventListener('mouseup', function(e){
         mouseDown = false
     })
     function ColorEvt(e){
@@ -22,26 +22,10 @@
 
     mainBox.appendChild(pickedColor())
 
-    function flexColumn(){
-        var column = document.createElement('div')
-        column.classList.add('column')
-
-        let y = 0
-        while (y < 35){
-            let div = makeSquare()
-            div.id = 'y' + y
-            column.appendChild(div)
-            y++
-        }
-        return column
-    }
-
     function canvas(){
         let x = 0
-        while (x < 50){
-            var col = flexColumn()
-            col.id = 'x' + x
-            canvasBox.appendChild(col)
+        while (x < 1750){
+            canvasBox.appendChild(makeSquare())
             x++
         }
     }
@@ -67,7 +51,7 @@
         return div
     }
 
-    var currentColor = 'black'
+    var currentColor = document.getElementById('pickedColor').style.backgroundColor
     
     var colorPalette = [
         '#000000', '#404040', '#FF0000', '#FF6A00', '#FFD800',
@@ -83,4 +67,74 @@
     }
     palette()
 
+    function local(){
+        var saveName = document.createElement('input')
+        saveName.style.width = '150px'
+        saveName.type = 'text'
+        saveName.style.margin = '30px'
+        mainBox.appendChild(saveName)
+        var saveButton = document.createElement('button')
+        saveButton.style.width = '150px'
+        saveButton.style.margin = '5px'
+        saveButton.textContent = 'Save'
+        var allPixels = canvasBox.children
+        saveButton.addEventListener('click', function(){
+            var colorData = []
+            for (let x = 0; x < allPixels.length; x++){
+                    currentBGC = allPixels[x].style.backgroundColor
+                    colorData.push(currentBGC)
+                }
+            localStorage.setItem(saveName.value, JSON.stringify(colorData))
+        })
+        mainBox.appendChild(saveButton)
+        
+        var loadButton = document.createElement('button')
+        loadButton.style.width = '150px'
+        loadButton.style.margin = '30px'
+        loadButton.textContent = 'Load'
+        loadButton.addEventListener('click', function(){
+            var loadedColors = JSON.parse(localStorage.getItem(loadSelect.value))
+            for (let i = 0; i < loadedColors.length; i++){
+                allPixels[i].style.backgroundColor = loadedColors[i]
+            }
+        })
+        mainBox.appendChild(loadButton)
+
+        var loadList = []
+        for (let i = 0; i < localStorage.length; i++){
+            loadList.push(localStorage.key(i))
+        }
+
+        var loadSelect = document.createElement('select')
+        loadSelect.style.margin = '5px'
+        loadSelect.style.width = '150px'
+        for (let i = 0; i < loadList.length; i++){
+            var opt = document.createElement('option')
+            opt.innerHTML = loadList[i]
+            opt.value = loadList[i]
+            loadSelect.appendChild(opt)
+        }
+        mainBox.appendChild(loadSelect)
+
+        var deleteButton = document.createElement('button')
+        deleteButton.style.width = '75px'
+        deleteButton.textContent = 'Delete'
+        deleteButton.addEventListener('click', function(){
+            localStorage.removeItem(loadSelect.value)
+        })
+        mainBox.appendChild(deleteButton)
+    }
+    local()
+
+    // function xyLocation(){
+    //     var xyCoord = document.createElement('p')
+    //     xyCoord.style.fontSize = '20pt'
+    //     xyCoord.style.margin = '30px'
+    //     xyCoord.textContent = ','
+    //     mainBox.appendChild(xyCoord)
+    //     canvasBox.addEventListener('mouseover', function(){
+
+    //     })
+    // }
+    // xyLocation()
 })()
